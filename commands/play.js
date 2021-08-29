@@ -1,5 +1,6 @@
 const ytdl = require('ytdl-core');
 const { YTSearcher } = require('ytsearcher');
+const ytlist = require('youtube-playlist');
 
 const searcher = new YTSearcher({
     key: 'AIzaSyCT7SvTzyZX23d6mewlqNbQ3AIM_3b10uk',
@@ -11,21 +12,27 @@ module.exports = {
     description: 'Plays a song from youtube',
     async execute(message, serverQueue, args) {
         let voiceChannel = message.member.voice.channel;
-        if (!voiceChannel) {
+        if (!voiceChannel)
             return message.channel.send('Please join a voice chat first');
-        }
         else {
             let regLink = args.toString().match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$/);
-            let result;
+            let playlistRegLing = args.toString().match(/^.*(youtu.be\/|list=)([^#\&\?]*).*/);
+            let result, song;
 
-            if (!regLink || args.toString().substring(0, 4) !== 'http')
+            if (playlistRegLing) {
+                const url = 'https://www.youtube.com/playlist?list=PLyrKrdpEL97OXq8I4fObbQKm7OJHdzQS7';
+                ytlist(url, 'url').then(res => {
+                    console.log(res)
+                })
+            }
+            if (!regLink)
                 result = await searcher.search(args.join(' '), { type: 'video' });
             else
                 result = await searcher.search(args, { type: 'video' });
 
             let songInfo = await ytdl.getInfo(result.first.url);
-
-            let song = {
+            console.log(songInfo);
+            song = {
                 title: songInfo.videoDetails.title,
                 url: songInfo.videoDetails.video_url
             };
