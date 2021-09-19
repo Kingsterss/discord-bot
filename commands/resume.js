@@ -1,8 +1,9 @@
 module.exports = {
 	name: 'resume',
+	commands: ['resume', 'unpause'],
+	args: [],
 	description: 'Resumes the current paused song',
-	execute(message) {
-		const serverQueue = message.client.queue.get(message.guild.id);
+	async execute(message, args, constants, serverQueue, Discord, prefix) {
 		if (serverQueue && !serverQueue.playing) {
 			serverQueue.playing = true;
 			serverQueue.connection.dispatcher.resume();

@@ -1,24 +1,10 @@
-const { Guild } = require("discord.js");
-
+const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max));
 module.exports = {
     name: 'greet',
-    description: "this is a greet command!",
-    execute(message, args){
-        function getRandomInt(max) {
-            return Math.floor(Math.random() * Math.floor(max));
-        }
-
-        let num = getRandomInt(3);
-        switch (num) {
-            case 0:
-                message.channel.send('O');
-                break;
-            case 1:
-                message.channel.send('Yo');
-                break;
-            case 2:
-                message.channel.send('Oho');
-                break;
-        }
+    description: 'This is a greet command!',
+    args: [],
+    commands: ['o', 'oho', 'yo'],
+    async execute(message, args, constants, serverQueue, Discord, prefix) {
+        message.channel.send(this.commands[getRandomInt(3)]);
     }
 };

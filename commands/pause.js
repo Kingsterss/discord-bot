@@ -1,8 +1,9 @@
 module.exports = {
 	name: 'pause',
+	commands: ['pause'],
+	args: [],
 	description: 'Pause the current song',
-	execute(message) {
-		const serverQueue = message.client.queue.get(message.guild.id);
+	async execute(message, args, constants, serverQueue, Discord, prefix) {
 		if (serverQueue && serverQueue.playing) {
 			serverQueue.playing = false;
 			serverQueue.connection.dispatcher.pause();
