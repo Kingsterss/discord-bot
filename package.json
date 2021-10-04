@@ -8,8 +8,8 @@
     "start": "node main.js"
   },
   "engines": {
-    "node": "16.x",
-    "npm": "7.x"
+    "node": "14.7.0",
+    "npm": "14.7.0"
   },
   "author": "KisGames",
   "license": "ISC",
