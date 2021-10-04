@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node main.js"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "author": "KisGames",
   "license": "ISC",
   "dependencies": {
