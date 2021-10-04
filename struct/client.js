@@ -16,11 +16,11 @@ module.exports = class extends Client {
         this.owner = constants.env.ownerId;
         this.data = GetData;
         this.commands = new Collection();
-        this.queue = new Map();
         this.queueFilling = false;
         this.radioMode = false;
         this.config = config;
 
+        this.youtubeKey = (type) => business.youtubeKey(type);
         this.setClientStatusData = (msg, type, isSetting = true) => {
             const dataTransfer = {
                 msg: msg,
@@ -30,10 +30,13 @@ module.exports = class extends Client {
             if (isSetting) this.user.setActivity(msg, { type: type });
             else this.user.setActivity(null);
         };
+        this.setPfp = (img) => {
+            let result = 'Successfully changed pfp';
+            this.user.setAvatar(img).catch(err => result = err)
+            return result;
+        };
         this.guildData = (id) => business.findGuildServerData(id);
-        this.prefixGuildData = (id, prefix) => {
-            business.prefixGuildData(business.findGuildServerData(id), prefix);
-        }
-        this.getPrefix = (id) => business.prefixGuildData(business.findGuildServerData(id), null, true);
+        this.prefixGuildData = (id, prefix) => business.prefixGuildData(id, prefix);
+        this.getPrefix = (id) => business.prefixGuildData(id, null, true);
     }
 };

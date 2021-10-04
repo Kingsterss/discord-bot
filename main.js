@@ -3,6 +3,21 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const constants = require('./struct/constants');
 
+Discord.Structures.extend('Guild', Guild => {
+    class MusicGuild extends Guild {
+        constructor(client, data) {
+            super(client, data);
+            this.musicData = {
+                queue: [],
+                isPlaying: false,
+                volume: 1,
+                songDispatcher: null
+            };
+        }
+    }
+    return MusicGuild;
+});
+
 const clientCtor = require('./struct/client');
 const client = new clientCtor({ token: process.env.DISCORD_TOKEN, prefix: process.env.DEFAULT_DISCORD_PREFIX });
 
@@ -20,16 +35,18 @@ client.on('ready', () => {
     client.user.setActivity(status.msg, { type: status.type.toUpperCase() });
 });
 
+client.on('guildCreate', guild => {
+    const channel = guild.channels.cache.find(channel => channel.type === 'text' && channel.permissionsFor(guild.me).has('SEND_MESSAGES'))
+    channel.send('Thanks for inviting me')
+})
+
 client.on('message', async (message) => {
-    if(!message.client.config.prefix === null)
-        message.client.config.prefix = client.getPrefix(message.guild.id);
-    if (!message.content.startsWith(message.client.config.prefix) || message.author.bot) return;
-    const serverQueue = message.client.queue.get(message.guild.id);
+    if (!message.content.startsWith(message.client.getPrefix(message.guild.id) ?? message.client.config.prefix) || message.author.bot) return;
+    const serverQueue = message.guild.queue;
     const args = message.content.slice(message.client.config.prefix.length).trim().split(/ +/g)
     const command = args.shift().toLowerCase();
 
-    if (executeCommand(command, message, args, serverQueue) === false)
-        message.channel.send('I don\'t recognize this command');
+    if (executeCommand(command, message, args, serverQueue) === false) return message.channel.send('I don\'t recognize this command');
 });
 
 function executeCommand(command, message, args, serverQueue) {

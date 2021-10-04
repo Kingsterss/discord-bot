@@ -13,11 +13,10 @@ module.exports = {
         if (serverQueue) serverQueue.queue = [];
         const radioData = message.client.data.clientData.radioLinks;
         if (!includeAny(`${args[0] ?? ''}`.replace(/(^\w|\s\w)/g, m => m.toUpperCase()), radioData)) {
-            let radioInfoMessage = 'Radio couldn\'t be found. Available radios:';
+            let radioInfoMessage = 'Available radios:';
             radioData.forEach(radioInfo => radioInfoMessage += '\n - ' + radioInfo.name);
             return message.channel.send(radioInfoMessage);
         }
-        if (message.client.radioMode) return message.channel.send('Radio is already playing 📻');
         message.member.voice.channel.join().then(VoiceConnection => {
             message.guild.me.voice.setSelfDeaf(true);
             radioData.forEach(radioInfo => {

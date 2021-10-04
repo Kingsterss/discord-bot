@@ -6,7 +6,11 @@ module.exports = {
     description: 'Changes the server\`s unique settings',
     async execute(message, args, constants, serverQueue, Discord, prefix) {
         if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.channel.send('You can\'t use this command!');
-        if (args[0] === 'status')
-            console.log('status: ' + message.client.guildData(message.guild.id));
+        if (args[0] === 'status') console.log('status: ' + message.client.guildData(message.guild.id));
+        if (args[0] === 'switch')
+            if(args[1] === 'key'){
+                console.log(false)
+                message.client.youtubeKey(false);
+            }
     }
 }

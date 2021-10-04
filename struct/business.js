@@ -9,7 +9,7 @@ const guildData = JSON.parse(rawGuildData);
 
 const serverUniqueCtor = {
     queue: [],
-    prefix: constants.defaultPrefix
+    prefix: constants.env.defaultPrefix
 }
 
 const serverUniqueQueueCtor = {
@@ -28,6 +28,7 @@ module.exports = {
         const guildIdExist = guildData.serverUnique.hasOwnProperty(id);
         if (!guildIdExist) {
             guildData.serverUnique[id] = serverUniqueCtor;
+            console.log(guildData.serverUnique[id]);
             fs.writeFileSync(constants.data.guildDataPath, JSON.stringify(guildData));
         }
         const dataExport = {
@@ -36,11 +37,21 @@ module.exports = {
         }
         return dataExport;
     },
-    prefixGuildData(guildServerData, newPrefix, isGet = false) {
+    prefixGuildData(id, newPrefix, isGet = false) {
+        let guildServerData = this.findGuildServerData(id);
         if (isGet) return guildServerData.data.prefix;
         if(!newPrefix) console.error('No prefix arg was given!');
-
-        guildData.serverUnique[guildServerData.id].prefix = newPrefix;
-        fs.writeFileSync(constants.data.guildDataPath, JSON.stringify(guildData));
+        try {
+            guildData.serverUnique[guildServerData.id].prefix = newPrefix;
+            fs.writeFileSync(constants.data.guildDataPath, JSON.stringify(guildData));
+        } catch (error) { return false; }
+        return true;
+    },
+    youtubeKey(get = true) {
+        let data = clientData.youtubeKeyId;
+        if(get) return data;
+        data = data === 0 ? 1 : 0;
+        clientData.youtubeKeyId = data;
+        fs.writeFileSync('data/ClientData.json', JSON.stringify(clientData));
     }
 }
