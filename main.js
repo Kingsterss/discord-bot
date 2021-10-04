@@ -3,6 +3,17 @@ const Discord = require('discord.js');
 const fs = require('fs');
 const constants = require('./struct/constants');
 
+const clientCtor = require('./struct/client');
+const client = new clientCtor({ token: process.env.DISCORD_TOKEN, prefix: process.env.DEFAULT_DISCORD_PREFIX });
+
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+
+    client.commands.set(command.name, command);
+}
+
 Discord.Structures.extend('Guild', Guild => {
     class MusicGuild extends Guild {
         constructor(client, data) {
@@ -17,17 +28,6 @@ Discord.Structures.extend('Guild', Guild => {
     }
     return MusicGuild;
 });
-
-const clientCtor = require('./struct/client');
-const client = new clientCtor({ token: process.env.DISCORD_TOKEN, prefix: process.env.DEFAULT_DISCORD_PREFIX });
-
-client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-
-    client.commands.set(command.name, command);
-}
 
 client.on('ready', () => {
     console.log('Kis bot is now Online!');
