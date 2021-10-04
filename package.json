@@ -16,5 +16,15 @@
     "ffmpeg-static": "^4.4.0",
     "simple-youtube-api": "^5.2.1",
     "ytdl-core": "^4.9.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KristiyanStefanov23/discord-bot.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/KristiyanStefanov23/discord-bot/issues"
+  },
+  "homepage": "https://github.com/KristiyanStefanov23/discord-bot#readme"
 }
